@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: wingrad
+Version: 1.0.2
+Summary: A vectorized version of Andrej Karpathy's 'micrograd'
+Author-email: Will Ingram <wingram2@outlook.com>
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# wingrad - A vectorized version of Andrej Karpathy's 'micrograd'
+
+

@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+src/wingrad/__init__.py
+src/wingrad/net.py
+src/wingrad/tensor.py
+src/wingrad.egg-info/PKG-INFO
+src/wingrad.egg-info/SOURCES.txt
+src/wingrad.egg-info/dependency_links.txt
+src/wingrad.egg-info/top_level.txt
