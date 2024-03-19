@@ -4,8 +4,7 @@ demos/mnist/__pycache__/
 demos/points/__pycache__/
 dist/
 pyproject.toml
-src/wingrad.egg-info/
+wingrad.egg-info/
 .DS_Store
-src/.DS_Store
 demos/.DS_Store
 __pycache__/
