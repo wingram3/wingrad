@@ -8,3 +8,5 @@ wingrad.egg-info/
 .DS_Store
 demos/.DS_Store
 __pycache__/
+moons_classified.png
+moons_raw.png
