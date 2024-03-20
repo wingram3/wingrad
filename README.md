@@ -83,7 +83,60 @@ class Layer(Module):
 
 ## Demos
 
-For an idea of what can be done with wingrad, please take a look at the `demos/` directory. It includes a few examples of classification problems, ranging from simple, tiny datasets, to the full mnist dataset.
+For an idea of what can be done with wingrad, please take a look at the `demos/` directory. It includes a few examples of classification problems, ranging from simple, tiny datasets, to the full mnist dataset. Below is a demo of basic Tensor operations that can be called, as well as a simple demo of what the backward() method does.
+
+```python
+# basic demo of Tensor operations 
+a = Tensor([[1.0, 2.0, 3.0],
+            [4.0, 5.0, 6.0],
+            [7.0, 8.0, 9.0]])
+
+b = Tensor([[1.0],
+            [2.0],
+            [3.0]])
+
+c = Tensor(-0.5)
+d = Tensor([[5.0, -1.0, -2.0, 4.0, 9.0]])
+
+e = a ^ b          # dot product of and b
+f = c + d          # addition of c and d (broadcasting)
+g = e * c          # elementwise multiplication of e and c
+h = g**3           # taking g to the power of 3
+f.sum(axis=1)      # summing elements of f over rows
+i = b.tanh()       # putting b through tanh function
+j = i.transpose()  # taking the transpose of i 
+a.sum(axis=0)      # summing elements of a over columns
+b.reshape((1, 3))  # reshaping from (3, 1) to (1, 3)
+
+```
+#### Output:
+```
+e:  Tensor(data=[[14.]
+                 [32.]
+                 [50.]])
+
+f:  Tensor(data=[[ 4.5 -1.5 -2.5  3.5  8.5]])
+
+g:  Tensor(data=[[ -7.]
+                 [-16.]
+                 [-25.]])
+
+h:  Tensor(data=[[  -343.]
+                 [ -4096.]
+                 [-15625.]])
+
+f summed over rows:  Tensor(data=[12.5])
+
+i:  Tensor(data=[[0.76159416]
+                 [0.96402758]
+                 [0.99505475]])
+
+j:  Tensor(data=[[0.76159416 0.96402758 0.99505475]])
+
+k:  Tensor(data=[12. 15. 18.])
+
+b with new shape:  Tensor(data=[[1. 2. 3.]])
+```
 
 ![moons before classification](moons_raw.png)
 
