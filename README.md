@@ -38,25 +38,25 @@ class Tensor:
 Wingrad's backward() method serves the same purpose as the backward() method in micrograd, which is to create a topologically ordered computation graph and implement backpropagation through that graph. However, while micrograd uses recursion to populate an ordered list of nodes, wingrad takes a different approach, using a simple while loop and double ended queue, or stack. It is a simple implementation of Kahn's algorithm. This allowed for larger training sets, as the recursive approach would often throw recursion depth errors for large datasets. 
 
 ```python
-# autograd function
-    def backward(self):
+# autograd method
+def backward(self):
 
-        topo = []
-        visited = set()
-        stack = deque([self])
+    topo = []
+    visited = set()
+    stack = deque([self])
 
-        # topologically sort all tensors in computation graph in reverse order
-        while stack:
-            node = stack.popleft()
-            if node not in visited:
-                visited.add(node)
-                stack.extend(node._prev)
-                topo.append(node)
+    # topologically sort all tensors in computation graph in reverse order
+    while stack:
+        node = stack.popleft()
+        if node not in visited:
+            visited.add(node)
+            stack.extend(node._prev)
+            topo.append(node)
         
-        # go through all tensors and apply _backward() function to get gradients
-        self.grad = np.ones_like(self.data)
-        for tensor in topo:
-            tensor._backward()
+    # go through all tensors and apply _backward() function to get gradients
+    self.grad = np.ones_like(self.data)
+    for tensor in topo:
+        tensor._backward()
 ```
 
 ### No Neuron class
