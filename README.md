@@ -21,8 +21,62 @@ In neural networks, and specifically for supervised deep learning problems, reve
 ### The use of Tensors vs. Values
 While wingrad and micrograd both allow for the construction of neural nets using DAGs and reverse-mode autodiff, wingrad is slightly more complex in its implementation because of its use of array-like Tensor objects, as opposed to Value objects, which hold single scalar values. In neural nets, Tensors allow us to take advantage of the parallelized structure of GPUs and CPUs, leading to faster calculations of layer activations and gradients of parameters. All if this means we are able to train neural network models much faster. This kind of defeats the purpose of micrograd as an in-depth teaching tool, but it was a fun challenge to implement Tensors into wingrad.
 
-### Non-recursive backward() function
+```python
+class Tensor:
+    
+    def __init__(self, data, _children=(), _op=''):
+        data = data if isinstance(data, np.ndarray) else np.array(data)
+        self.data = data                        # the tensor's data
+        self.grad = np.zeros_like(data)         # gradient/derivative of the tensor w.r.t. whatever tensor _backward() was called on
+        self._backward = lambda: None           # _backward() function, depends on what operation made the tensor
+        self._prev = set(_children)             # set of the two tensors that made the tensor by some operation
+        self._op = _op                          # operation that made the tensor from its child tensors
+        self.shape = self.data.shape            # dimensions of the tensor's data
+```
+
+### Non-recursive backward() method
 Wingrad's backward() method serves the same purpose as the backward() method in micrograd, which is to create a topologically ordered computation graph and implement backpropagation through that graph. However, while micrograd uses recursion to populate an ordered list of nodes, wingrad takes a different approach, using a simple while loop and double ended queue, or stack. It is a simple implementation of Kahn's algorithm. This allowed for larger training sets, as the recursive approach would often throw recursion depth errors for large datasets. 
+
+```python
+# autograd function
+    def backward(self):
+
+        topo = []
+        visited = set()
+        stack = deque([self])
+
+        # topologically sort all tensors in computation graph in reverse order
+        while stack:
+            node = stack.popleft()
+            if node not in visited:
+                visited.add(node)
+                stack.extend(node._prev)
+                topo.append(node)
+        
+        # go through all tensors and apply _backward() function to get gradients
+        self.grad = np.ones_like(self.data)
+        for tensor in topo:
+            tensor._backward()
+```
 
 ### No Neuron class
 Because of the parallel operations between Tensors, there was no need to create a separate Neuron class to define each neuron's characteristics. Instead, neurons in wingrad are represented in the Layer class (`net.py`) by their weights, biases, and activations alone. Computations of a layer's activations, gradients of its parameters, and updates to its parameters happen more or less simultaneously thanks to the NumPy library's efficient linear algebra operations.
+
+```python
+# a layer of neurons
+class Layer(Module):
+
+    def __init__(self, nin, nout):
+        self.w = Tensor(np.random.randn(nout, nin))     # tensor of all weights in a layer
+        self.b = Tensor(np.zeros((nout, 1)))            # tensor of all biases in a layer
+
+    def __call__(self, x):
+        wx = self.w ^ x     # weighted sum of weights and inputs (dot product)
+        z = wx + self.b     # raw neuron activations
+        a = z.tanh()        # z fed through activation function
+        return a
+    
+    # parameters of a layer
+    def parameters(self):
+        return [self.w] + [self.b]
+```
