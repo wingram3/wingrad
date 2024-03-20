@@ -66,6 +66,16 @@ class Tensor:
 
         return out
     
+    # e to the power of a Tensor
+    def exp(self):
+        out = Tensor(np.exp(self.data), (self,), 'exp')
+
+        def _backward():
+            self.grad += out.data * out.grad
+        out._backward = _backward
+
+        return out
+    
     # natural log of a tensor (for cross entropy loss)
     def log(self):
         out = Tensor(np.log(self.data), (self,), 'ln')
