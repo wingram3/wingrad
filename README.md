@@ -19,7 +19,7 @@ In neural networks, and specifically for supervised deep learning problems, reve
 ## Main differences between wingrad and micrograd
 
 ### The use of Tensors vs. Values
-While wingrad and micrograd both allow for the construction of neural nets using DAGs and reverse-mode autodiff, wingrad is slightly more complex in its implementation because of its use of array-like Tensor objects, as opposed to Value objects, which hold single scalar values. In neural nets, Tensors allow us to take advantage of the parallelized structure of GPUs and CPUs, leading to faster calculations of layer activations and gradients of parameters. All if this means we are able to train neural network models much faster. This kind of defeats the purpose of micrograd as an in-depth teaching tool, but it was a fun challenge to implement Tensors into wingrad. Below is the Tensor class's `__init__()` method for reference.
+While wingrad and micrograd both allow for the construction of neural nets using DAGs and reverse-mode autodiff, wingrad is slightly more complex in its implementation because of its use of array-like Tensor objects, as opposed to Value objects, which hold single scalar values. In neural nets, Tensors allow us to take advantage of the parallelized structure of GPUs and CPUs, leading to faster calculations of layer activations and gradients of parameters. All of this means we are able to train neural network models much faster. This kind of defeats the purpose of micrograd as an in-depth teaching tool, but it was a fun challenge to implement Tensors into wingrad. Below is the Tensor class's `__init__()` method for reference.
 
 ```python
 class Tensor:
@@ -133,7 +133,7 @@ i:  Tensor(data=[[0.76159416]
 
 j:  Tensor(data=[[0.76159416 0.96402758 0.99505475]])
 
-k:  Tensor(data=[12. 15. 18.])
+a summed over columns:  Tensor(data=[12. 15. 18.])
 
 b with new shape:  Tensor(data=[[1. 2. 3.]])
 ```
