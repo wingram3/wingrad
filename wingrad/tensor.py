@@ -76,7 +76,7 @@ class Tensor:
 
         return out
 
-    # tanh activation function
+    # tanh activation method
     def tanh(self):
         x = self.data
         t = (np.exp(2*x) - 1) / (np.exp(2*x) + 1)
