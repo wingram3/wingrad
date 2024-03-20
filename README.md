@@ -85,8 +85,8 @@ class Layer(Module):
 
 For an idea of what can be done with wingrad, please take a look at the `demos/` directory. It includes a few examples of classification problems, ranging from simple, tiny datasets, to the full mnist dataset. Below is a demo of basic Tensor operations that can be called, as well as a simple demo of what the backward() method does.
 
+#### Basic demo of Tensor operations
 ```python
-# basic demo of Tensor operations 
 a = Tensor([[1.0, 2.0, 3.0],
             [4.0, 5.0, 6.0],
             [7.0, 8.0, 9.0]])
@@ -136,6 +136,55 @@ j:  Tensor(data=[[0.76159416 0.96402758 0.99505475]])
 k:  Tensor(data=[12. 15. 18.])
 
 b with new shape:  Tensor(data=[[1. 2. 3.]])
+```
+
+#### Demo of backward() method
+```python
+# demo of backward() method
+a = Tensor([[1.0, 2.0, 3.0],
+            [4.0, 5.0, 6.0],
+            [7.0, 8.0, 9.0]])
+
+b = Tensor([[1.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0]])
+
+c = Tensor([[10., 11., 12.],
+            [13., 14., 15.], 
+            [16., 17., 18.]])
+
+d = Tensor([[-0.5, 0.5, -0.5],
+            [0.5, -0.5, 0.5],
+            [-0.5, 0.5, -0.5]])
+
+e = a ^ b
+f = c + d
+g = e * f
+
+g.backward()
+```
+
+#### Output:
+```
+g:  Tensor(data=[[ 57.   69.   69. ]
+                 [202.5 202.5 232.5]
+                 [372.  420.  420. ]])
+
+derivative of a w.r.t g:  [[32.5 32.5 32.5]
+                           [42.5 42.5 42.5]
+                           [50.5 50.5 50.5]]
+
+derivative of b w.r.t g:  [[172.  188.  196. ]
+                           [210.5 230.5 240.5]
+                           [249.  273.  285. ]]
+
+derivative of c w.r.t g:  [[ 6.  6.  6.]
+                           [15. 15. 15.]
+                           [24. 24. 24.]]
+
+derivative of d w.r.t g:  [[ 6.  6.  6.]
+                           [15. 15. 15.]
+                           [24. 24. 24.]]
 ```
 
 ![moons before classification](moons_raw.png)
