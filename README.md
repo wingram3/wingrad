@@ -8,7 +8,6 @@ To install wingrad:
 
 ```
 pip install -i https://test.pypi.org/simple/ wingrad
-
 ```
 
 ## How it works
