@@ -187,6 +187,4 @@ derivative of g w.r.t d:  [[ 6.  6.  6.]
                            [24. 24. 24.]]
 ```
 
-![moons before classification](moons_raw.png)
-
-![moons after classification](moons_classified.png)
+![moons before classification](moons_raw.png)  ![moons after classification](moons_classified.png)
