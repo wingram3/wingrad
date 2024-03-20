@@ -66,7 +66,7 @@ class Tensor:
 
         return out
     
-    # e to the power of a Tensor
+    # exponential of each element in a tensor
     def exp(self):
         out = Tensor(np.exp(self.data), (self,), 'exp')
 
@@ -76,7 +76,7 @@ class Tensor:
 
         return out
     
-    # natural log of a tensor (for cross entropy loss)
+    # natural log of each element in a tensor
     def log(self):
         out = Tensor(np.log(self.data), (self,), 'ln')
 
