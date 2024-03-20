@@ -163,3 +163,33 @@ class Tensor:
         self.grad = self.grad.T
         self.shape = self.data.shape
         return self
+    
+
+# demo of backward() method
+a = Tensor([[1.0, 2.0, 3.0],
+            [4.0, 5.0, 6.0],
+            [7.0, 8.0, 9.0]])
+
+b = Tensor([[1.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0],
+            [1.0, 1.0, 1.0]])
+
+c = Tensor([[10., 11., 12.],
+            [13., 14., 15.], 
+            [16., 17., 18.]])
+
+d = Tensor([[-0.5, 0.5, -0.5],
+            [0.5, -0.5, 0.5],
+            [-0.5, 0.5, -0.5]])
+
+e = a ^ b
+f = c + d
+g = e * f
+
+g.backward()
+
+print('g: ', g)
+print('derivative of a w.r.t g: ', a.grad)
+print('derivative of b w.r.t g: ', b.grad)
+print('derivative of c w.r.t g: ', c.grad)
+print('derivative of d w.r.t g: ', d.grad)
