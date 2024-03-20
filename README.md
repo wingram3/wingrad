@@ -85,6 +85,6 @@ class Layer(Module):
 
 For an idea of what can be done with wingrad, please take a look at the `demos/` directory. It includes a few examples of classification problems, ranging from simple, tiny datasets, to the full mnist dataset.
 
-![moons before classification](/Users/wingr/Documents/Developer/python/autograd_engine/moons_raw.png)
+![moons before classification](moons_raw.png)
 
-![moons after classification](/Users/wingr/Documents/Developer/python/autograd_engine/moons_classified.png)
+![moons after classification](moons_classified.png)
