@@ -161,7 +161,7 @@ e = a ^ b
 f = c + d
 g = e * f
 
-g.backward()
+g.backward()   # find derivatives of g w.r.t all other Tensors 
 ```
 
 #### Output:
@@ -170,19 +170,19 @@ g:  Tensor(data=[[ 57.   69.   69. ]
                  [202.5 202.5 232.5]
                  [372.  420.  420. ]])
 
-derivative of a w.r.t g:  [[32.5 32.5 32.5]
+derivative of g w.r.t a:  [[32.5 32.5 32.5]
                            [42.5 42.5 42.5]
                            [50.5 50.5 50.5]]
 
-derivative of b w.r.t g:  [[172.  188.  196. ]
+derivative of g w.r.t b:  [[172.  188.  196. ]
                            [210.5 230.5 240.5]
                            [249.  273.  285. ]]
 
-derivative of c w.r.t g:  [[ 6.  6.  6.]
+derivative of g w.r.t c:  [[ 6.  6.  6.]
                            [15. 15. 15.]
                            [24. 24. 24.]]
 
-derivative of d w.r.t g:  [[ 6.  6.  6.]
+derivative of g w.r.t d:  [[ 6.  6.  6.]
                            [15. 15. 15.]
                            [24. 24. 24.]]
 ```
