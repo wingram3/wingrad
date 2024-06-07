@@ -1,4 +1,5 @@
 from wingrad.tensor import Tensor
+from typing import List
 import numpy as np
 
 """
@@ -16,7 +17,7 @@ class Module:
         for p in self.parameters():
             p.grad = np.zeros_like(p.grad)
 
-    def parameters(self):
+    def parameters(self) -> List:
         """
         Return the parameters of the module.
 
@@ -29,7 +30,7 @@ class Module:
 class Layer(Module):
     """ A layer of neurons. """
 
-    def __init__(self, nin, nout):
+    def __init__(self, nin: int, nout: int):
         """
         Initialize the layer with random weights and zero biases.
 
@@ -40,7 +41,7 @@ class Layer(Module):
         self.w = Tensor(np.random.randn(nout, nin))  # tensor of all weights in a layer
         self.b = Tensor(np.zeros((nout, 1)))  # tensor of all biases in a layer
 
-    def __call__(self, x):
+    def __call__(self, x: Tensor) -> Tensor:
         """
         Forward pass through the layer.
 
@@ -55,7 +56,7 @@ class Layer(Module):
         a = z.tanh()  # z fed through activation function
         return a
 
-    def parameters(self):
+    def parameters(self) -> List:
         """
         Return the parameters of the layer.
 
@@ -68,7 +69,7 @@ class Layer(Module):
 class MLP(Module):
     """ Multi-layer Perceptron module. """
 
-    def __init__(self, nin, nouts):
+    def __init__(self, nin: int, nouts: List):
         """
         Initialize the MLP with a list of Layer objects of specified sizes.
 
@@ -79,7 +80,7 @@ class MLP(Module):
         sz = [nin] + nouts
         self.layers = [Layer(sz[i], sz[i + 1]) for i in range(len(nouts))]
 
-    def __call__(self, x):
+    def __call__(self, x: Tensor) -> Tensor:
         """
         Forward pass through the MLP.
 
@@ -93,7 +94,7 @@ class MLP(Module):
             x = layer(x)
         return x
 
-    def parameters(self):
+    def parameters(self) -> List:
         """
         Return all parameters in the MLP.
 

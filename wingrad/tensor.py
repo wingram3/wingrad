@@ -1,6 +1,6 @@
 import numpy as np
 from collections import deque
-
+from typing import Union, Tuple, Callable, Set
 
 class Tensor:
     """
@@ -11,7 +11,7 @@ class Tensor:
     Essentially, _backward() locally applies the chain rule from calculus.
     """
 
-    def __init__(self, data, _children=(), _op=''):
+    def __init__(self, data: Union[np.ndarray, list], _children: Tuple['Tensor', ...] = (), _op: str = '') -> None:
         """
         Initialize a tensor.
 
@@ -20,15 +20,15 @@ class Tensor:
             _children: A tuple of child tensors that contributed to this tensor.
             _op: A string representing the operation that created the tensor.
         """
-        data = data if isinstance(data, np.ndarray) else np.array(data)    # turn data into numpy array if it isn't one already
-        self.data = data                        # the tensor's data
-        self.grad = np.zeros_like(data)         # gradient/derivative of the tensor w.r.t. whatever tensor _backward() was called on
-        self._backward = lambda: None           # _backward() function, depends on what operation made the tensor
-        self._prev = set(_children)             # set of the two tensors that made the tensor by some operation
-        self._op = _op                          # operation that made the tensor from its child tensors
-        self.shape = self.data.shape            # dimensions of the tensor's data
+        data = data if isinstance(data, np.ndarray) else np.array(data)  # turn data into numpy array if it isn't one already
+        self.data: np.ndarray = data                        # the tensor's data
+        self.grad: np.ndarray = np.zeros_like(data)         # gradient/derivative of the tensor w.r.t. whatever tensor _backward() was called on
+        self._backward: Callable[[], None] = lambda: None   # _backward() function, depends on what operation made the tensor
+        self._prev: Set = set(_children)          # set of the two tensors that made the tensor by some operation
+        self._op: str = _op                                 # operation that made the tensor from its child tensors
+        self.shape: Tuple[int, ...] = self.data.shape       # dimensions of the tensor's data
 
-    def __add__(self, other):
+    def __add__(self, other) -> 'Tensor':
         """Add two tensors.
 
         Args:
@@ -37,17 +37,17 @@ class Tensor:
         Returns:
             A new tensor resulting from the addition.
         """
-        other = other if isinstance(other, Tensor) else Tensor(other)   # turn other into a tensor if it isn't one already
+        other = other if isinstance(other, Tensor) else Tensor(other)  # turn other into a tensor if it isn't one already
         out = Tensor(self.data + other.data, (self, other), '+')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += out.grad.astype(self.grad.dtype).reshape(self.shape)
             other.grad += out.grad.astype(other.grad.dtype).reshape(other.shape)
         out._backward = _backward
 
         return out
 
-    def __mul__(self, other):
+    def __mul__(self, other) -> 'Tensor':
         """Multiply two tensors (element-wise).
 
         Args:
@@ -59,14 +59,14 @@ class Tensor:
         other = other if isinstance(other, Tensor) else Tensor(other)
         out = Tensor(self.data * other.data, (self, other), '*')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += other.data * out.grad
             other.grad += self.data * out.grad
         out._backward = _backward
 
         return out
 
-    def __xor__(self, other):
+    def __xor__(self, other) -> 'Tensor':
         """Multiply two tensors (dot product).
 
         Args:
@@ -78,14 +78,14 @@ class Tensor:
         other = other if isinstance(other, Tensor) else Tensor(other)
         out = Tensor(np.dot(self.data, other.data), (self, other), 'dot')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += np.dot(out.grad, other.data.T)
             other.grad += np.dot(self.data.T, out.grad)
         out._backward = _backward
 
         return out
 
-    def __pow__(self, other):
+    def __pow__(self, other: Union[float, int]) -> 'Tensor':
         """Raise a tensor to the power of a float or int.
 
         Args:
@@ -97,13 +97,13 @@ class Tensor:
         assert isinstance(other, (int, float))
         out = Tensor(self.data ** other, (self,), f'**{other}')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += (other * self.data**(other - 1.0)) * out.grad
         out._backward = _backward
 
         return out
 
-    def exp(self):
+    def exp(self) -> 'Tensor':
         """Compute the exponential of each element in a tensor.
 
         Returns:
@@ -111,13 +111,13 @@ class Tensor:
         """
         out = Tensor(np.exp(self.data), (self,), 'exp')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += out.data * out.grad
         out._backward = _backward
 
         return out
 
-    def log(self):
+    def log(self) -> 'Tensor':
         """Compute the natural log of each element in a tensor.
 
         Returns:
@@ -125,29 +125,29 @@ class Tensor:
         """
         out = Tensor(np.log(self.data), (self,), 'ln')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += (1 / self.data) * out.grad
         out._backward = _backward
 
         return out
 
-    def tanh(self):
+    def tanh(self) -> 'Tensor':
         """Compute the tanh activation function.
 
         Returns:
             A new tensor with the tanh of each element.
         """
         x = self.data
-        t = (np.exp(2*x) - 1) / (np.exp(2*x) + 1)
+        t = (np.exp(2 * x) - 1) / (np.exp(2 * x) + 1)
         out = Tensor(t, (self,), 'tanh')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += (1 - t**2) * out.grad
         out._backward = _backward
 
         return out
 
-    def relu(self):
+    def relu(self) -> 'Tensor':
         """Compute the ReLU activation function.
 
         Returns:
@@ -155,13 +155,13 @@ class Tensor:
         """
         out = Tensor(np.maximum(0, self.data), (self,), 'ReLU')
 
-        def _backward():
+        def _backward() -> None:
             self.grad += (np.where(out.data <= 0, 0, 1)) * out.grad
         out._backward = _backward
 
         return out
 
-    def backward(self):
+    def backward(self) -> None:
         """Autograd function to compute gradients."""
         topo = []
         visited = set()
@@ -180,7 +180,7 @@ class Tensor:
         for tensor in topo:
             tensor._backward()
 
-    def __neg__(self):
+    def __neg__(self) -> 'Tensor':
         """Negation (for subtraction).
 
         Returns:
@@ -188,7 +188,7 @@ class Tensor:
         """
         return self * -1
 
-    def __sub__(self, other):
+    def __sub__(self, other: Union['Tensor', float, int]) -> 'Tensor':
         """Subtraction (uses existing __add__() method).
 
         Args:
@@ -199,7 +199,7 @@ class Tensor:
         """
         return self + (-other)
 
-    def __radd__(self, other):
+    def __radd__(self, other: Union['Tensor', float, int]) -> 'Tensor':
         """Reverse add. In case an operation is called on a non-tensor.
 
         Args:
@@ -210,7 +210,7 @@ class Tensor:
         """
         return self + other
 
-    def __rsub__(self, other):
+    def __rsub__(self, other: Union['Tensor', float, int]) -> 'Tensor':
         """Reverse subtract.
 
         Args:
@@ -221,7 +221,7 @@ class Tensor:
         """
         return other + (-self)
 
-    def __rmul__(self, other):
+    def __rmul__(self, other: Union['Tensor', float, int]) -> 'Tensor':
         """Reverse multiply.
 
         Args:
@@ -232,7 +232,7 @@ class Tensor:
         """
         return self * other
 
-    def __rxor__(self, other):
+    def __rxor__(self, other: Union['Tensor', float, int]) -> 'Tensor':
         """Reverse multiply (dot product).
 
         Args:
@@ -243,7 +243,7 @@ class Tensor:
         """
         return self ^ other
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """String representation of the tensor.
 
         Returns:
@@ -251,7 +251,7 @@ class Tensor:
         """
         return f'Tensor(data={self.data})'
 
-    def sum(self, axis=0):
+    def sum(self, axis: int = 0) -> 'Tensor':
         """Sum all elements in a tensor along a specified axis.
 
         Args:
@@ -265,7 +265,7 @@ class Tensor:
         self.shape = self.data.shape
         return self
 
-    def reshape(self, newshape):
+    def reshape(self, newshape: Tuple[int, ...]) -> 'Tensor':
         """Reshape a tensor's data.
 
         Args:
@@ -279,7 +279,7 @@ class Tensor:
         self.shape = self.data.shape
         return self
 
-    def transpose(self):
+    def transpose(self) -> 'Tensor':
         """Transpose a tensor's data.
 
         Returns:
