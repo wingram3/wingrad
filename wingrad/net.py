@@ -18,12 +18,6 @@ class Module:
             p.grad = np.zeros_like(p.grad)
 
     def parameters(self) -> List:
-        """
-        Return the parameters of the module.
-
-        Returns:
-            list: An empty list of parameters.
-        """
         return []
 
 

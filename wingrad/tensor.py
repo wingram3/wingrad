@@ -29,7 +29,8 @@ class Tensor:
         self.shape: Tuple[int, ...] = self.data.shape       # dimensions of the tensor's data
 
     def __add__(self, other) -> 'Tensor':
-        """Add two tensors.
+        """
+        Add two tensors.
 
         Args:
             other: The tensor to add.
@@ -48,7 +49,8 @@ class Tensor:
         return out
 
     def __mul__(self, other) -> 'Tensor':
-        """Multiply two tensors (element-wise).
+        """
+        Multiply two tensors (element-wise).
 
         Args:
             other: The tensor to multiply.
@@ -67,7 +69,8 @@ class Tensor:
         return out
 
     def __xor__(self, other) -> 'Tensor':
-        """Multiply two tensors (dot product).
+        """
+        Multiply two tensors (dot product).
 
         Args:
             other: The tensor to perform the dot product with.
@@ -86,7 +89,8 @@ class Tensor:
         return out
 
     def __pow__(self, other: Union[float, int]) -> 'Tensor':
-        """Raise a tensor to the power of a float or int.
+        """
+        Raise a tensor to the power of a float or int.
 
         Args:
             other: The exponent, which must be a float or int.
@@ -104,7 +108,8 @@ class Tensor:
         return out
 
     def exp(self) -> 'Tensor':
-        """Compute the exponential of each element in a tensor.
+        """
+        Compute the exponential of each element in a tensor.
 
         Returns:
             A new tensor with the exponential of each element.
@@ -118,7 +123,8 @@ class Tensor:
         return out
 
     def log(self) -> 'Tensor':
-        """Compute the natural log of each element in a tensor.
+        """
+        Compute the natural log of each element in a tensor.
 
         Returns:
             A new tensor with the natural log of each element.
@@ -132,7 +138,8 @@ class Tensor:
         return out
 
     def tanh(self) -> 'Tensor':
-        """Compute the tanh activation function.
+        """
+        Compute the tanh activation function.
 
         Returns:
             A new tensor with the tanh of each element.
@@ -148,7 +155,8 @@ class Tensor:
         return out
 
     def relu(self) -> 'Tensor':
-        """Compute the ReLU activation function.
+        """
+        Compute the ReLU activation function.
 
         Returns:
             A new tensor with the ReLU of each element.
@@ -162,7 +170,7 @@ class Tensor:
         return out
 
     def backward(self) -> None:
-        """Autograd function to compute gradients."""
+        """ Autograd function to compute gradients. """
         topo = []
         visited = set()
         stack = deque([self])
@@ -181,7 +189,8 @@ class Tensor:
             tensor._backward()
 
     def __neg__(self) -> 'Tensor':
-        """Negation (for subtraction).
+        """
+        Negation (for subtraction).
 
         Returns:
             A new tensor with negated elements.
@@ -189,7 +198,8 @@ class Tensor:
         return self * -1
 
     def __sub__(self, other: Union['Tensor', float, int]) -> 'Tensor':
-        """Subtraction (uses existing __add__() method).
+        """
+        Subtraction (uses existing __add__() method).
 
         Args:
             other: The tensor to subtract.
@@ -200,7 +210,8 @@ class Tensor:
         return self + (-other)
 
     def __radd__(self, other: Union['Tensor', float, int]) -> 'Tensor':
-        """Reverse add. In case an operation is called on a non-tensor.
+        """
+        Reverse add. In case an operation is called on a non-tensor.
 
         Args:
             other: The tensor or value to add.
@@ -211,7 +222,8 @@ class Tensor:
         return self + other
 
     def __rsub__(self, other: Union['Tensor', float, int]) -> 'Tensor':
-        """Reverse subtract.
+        """
+        Reverse subtract.
 
         Args:
             other: The tensor or value to subtract from.
@@ -222,7 +234,8 @@ class Tensor:
         return other + (-self)
 
     def __rmul__(self, other: Union['Tensor', float, int]) -> 'Tensor':
-        """Reverse multiply.
+        """
+        Reverse multiply.
 
         Args:
             other: The tensor or value to multiply.
@@ -233,7 +246,8 @@ class Tensor:
         return self * other
 
     def __rxor__(self, other: Union['Tensor', float, int]) -> 'Tensor':
-        """Reverse multiply (dot product).
+        """
+        Reverse multiply (dot product).
 
         Args:
             other: The tensor or value to multiply (dot product).
@@ -244,7 +258,8 @@ class Tensor:
         return self ^ other
 
     def __repr__(self) -> str:
-        """String representation of the tensor.
+        """
+        String representation of the tensor.
 
         Returns:
             A string representation of the tensor's value.
@@ -252,7 +267,8 @@ class Tensor:
         return f'Tensor(data={self.data})'
 
     def sum(self, axis: int = 0) -> 'Tensor':
-        """Sum all elements in a tensor along a specified axis.
+        """
+        Sum all elements in a tensor along a specified axis.
 
         Args:
             axis: The axis along which to sum.
@@ -266,7 +282,8 @@ class Tensor:
         return self
 
     def reshape(self, newshape: Tuple[int, ...]) -> 'Tensor':
-        """Reshape a tensor's data.
+        """
+        Reshape a tensor's data.
 
         Args:
             newshape: The new shape for the tensor.
@@ -280,7 +297,8 @@ class Tensor:
         return self
 
     def transpose(self) -> 'Tensor':
-        """Transpose a tensor's data.
+        """
+        Transpose a tensor's data.
 
         Returns:
             A new tensor with transposed data.
